@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School;
 
@@ -11,9 +12,11 @@ using School;
 namespace School.Migrations
 {
     [DbContext(typeof(AppContexts))]
-    partial class AppContextsModelSnapshot : ModelSnapshot
+    [Migration("20260921081112_ttt")]
+    partial class ttt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,22 +47,6 @@ namespace School.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ClassRooms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Capacity = 30,
-                            GradeLevel = 1,
-                            Name = "Class 1A"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Capacity = 30,
-                            GradeLevel = 2,
-                            Name = "Class 2A"
-                        });
                 });
 
             modelBuilder.Entity("School.Model.Department", b =>
@@ -194,24 +181,6 @@ namespace School.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Subjects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Basic mathematics and problem solving",
-                            MaxGrade = 100,
-                            Name = "Mathematics",
-                            TeacherId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "English language, grammar and literature",
-                            MaxGrade = 100,
-                            Name = "English",
-                            TeacherId = 2
-                        });
                 });
 
             modelBuilder.Entity("School.Model.Teacher", b =>

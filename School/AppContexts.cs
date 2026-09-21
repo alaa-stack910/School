@@ -7,6 +7,10 @@ namespace School
     {
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<ClassRoom> ClassRooms { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=SchoolDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
@@ -39,9 +43,41 @@ namespace School
 
             //Subject
 
+            modelBuilder.Entity<ClassRoom>().HasData(
+        new ClassRoom
+        {
+            Id = 1,
+            Name = "Class 1A",
+            GradeLevel = 1,
+            Capacity = 30
+        },
+        new ClassRoom
+        {
+            Id = 2,
+            Name = "Class 2A",
+            GradeLevel = 2,
+            Capacity = 30
+        });
 
+            modelBuilder.Entity<Subject>().HasData(
+       new Subject
+       {
+           Id = 1,
+           Name = "Mathematics",
+           Description = "Basic mathematics and problem solving",
+           MaxGrade = 100,
+           TeacherId = 1
+       },
+       new Subject
+       {
+           Id = 2,
+           Name = "English",
+           Description = "English language, grammar and literature",
+           MaxGrade = 100,
+           TeacherId = 2
+       });
 
-            base.OnModelCreating(modelBuilder);
+           base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace School.Controllers
 
             public IActionResult GetId(int id)
             {
-                var te = appContexts.Departments.FirstOrDefault(o => o.DepartmentId == id);
+                var te = appContexts.Departments.Include(j => j.Teachers).FirstOrDefault(o => o.DepartmentId == id);
                 return Ok(te);
             }
 

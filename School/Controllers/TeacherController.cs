@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using School.DTO.TeacherDTOs;
 using School.Model;
 using School.DTO;
+using AutoMapper;
+using School.Mapping;
 
 namespace School.Controllers
 {
@@ -12,32 +14,43 @@ namespace School.Controllers
     public class TeacherController : ControllerBase
     {
             private readonly AppContexts appContexts;
+        private readonly IMapper mapper;
 
-            public TeacherController()
+        public TeacherController()
             {
-                appContexts = new AppContexts();
-            }
+            appContexts = new AppContexts();
+            mapper = new MapperConfiguration(g=>g.AddProfile<TeacherProfile>()).CreateMapper();
+
+        }
 
 
             [HttpGet]
             public IActionResult GetAll()
             {
-                var te = appContexts.Teachers.Include(u=>u.department).ToList();
+            //DTO
+            //    var te = appContexts.Teachers.Include(u=>u.department).ToList();
 
-            List<TeacherDTO> result = new List<TeacherDTO>();
-            foreach (var teacher in te)
-                {
-                    var det = new TeacherDTO
-                    {
-                        id = teacher.TeacherId,
-                        FullName = teacher.FirstName + " " + teacher.LastName, 
+            //List<TeacherDTO> result = new List<TeacherDTO>();
+            //foreach (var teacher in te)
+            //    {
+            //        var det = new TeacherDTO
+            //        {
+            //            id = teacher.TeacherId,
+            //            FullName = teacher.FirstName + " " + teacher.LastName, 
 
-                        DepartmentName = teacher.department.Name
-                    };
-                    result.Add(det);
-                }
+            //            DepartmentName = teacher.department.Name
+            //        };
+            //        result.Add(det);
+            //    }
+            //return Ok(result);
+
+
+            var te = appContexts.Teachers.Include(u => u.department).ToList();
+
+            List<TeacherDTO> result = mapper.Map<List<TeacherDTO>>(te);
+            
             return Ok(result);
-            }
+        }
 
         //[HttpGet("WithDepart")]
 
@@ -73,50 +86,80 @@ namespace School.Controllers
         }
 
         [HttpPost]
-
         public IActionResult CreateTeacher(CreateTeacherDTO t)
         {
+            //if (t == null)
+            //{
+            //    return BadRequest("Not Created");
+            //}
+
+
+            //var dep=appContexts.Departments.FirstOrDefault(o => o.Name == t.DepartmentName);
+
+            //var te = new Teacher()
+            //{
+            //    FirstName = t.FirstName,
+            //    LastName = t.LastName,
+            //    department = dep,
+            //    Email = t.Email,
+            //    Salary = t.Salary,
+            //    Phone = t.Phone
+
+            //};
+
+            //var result = new TeacherDTO
+            //{
+            //    id = te.TeacherId,
+            //    FullName = te.FirstName + " " + te.LastName,
+            //    DepartmentName = te.department.Name
+            //};
+
+            //appContexts.Teachers.Add(te);
+            //appContexts.SaveChanges();
+
+            //return Ok(result);
+
             if (t == null)
             {
                 return BadRequest("Not Created");
             }
+            var dep = appContexts.Departments.FirstOrDefault(o => o.Name == t.DepartmentName);
 
-            var te = new Teacher()
-            {
-                
-                
-            };
-            appContexts.Teachers.Add(te);
+
+            var teacher = mapper.Map<Teacher>(t);
+            teacher.department = dep; 
+            appContexts.Teachers.Add(teacher);
             appContexts.SaveChanges();
-            return Ok();
+            var teacherDTO = mapper.Map<TeacherDTO>(teacher);
+            return Ok(teacherDTO);
         }
 
+        [HttpPut]
 
-        //[HttpPut]
+        public IActionResult UpdateTeacher(UpdateTeacherDTO t, int id)
+        {
+            if (t == null)
+            {
+                return NotFound();
+            }
+            var teacher = appContexts.Teachers
+        .Include(x => x.department)
+        .FirstOrDefault(x => x.TeacherId == id);
 
-        //public IActionResult UpdateTeacher(UpdateTeacherDTO t, int id)
-        //{
-        //    var dep = appContexts.Teachers.FirstOrDefault(o => o.TeacherId == id);
-        //    if (t == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //var v = new Teacher()
-        //{
-        //    FirstName = t.Firstname,
-        //    LastName = t.Lastname
-
-        //};
+            if (teacher == null)
+            {
+                return NotFound("Teacher not found");
+            }
+            teacher.department.Name = t.DepartmentName;
+            teacher.FirstName = t.FirstName;
+            teacher.LastName = t.LastName;
+            
 
 
-        ////    dep.FirstName = t.FirstName;
-        ////    dep.LastName = t.LastName;
-        ////dep.Email = t.Email;
-        ////dep.Phone = t.Phone;
-        ////dep.Salary = t.Salary;
-        //    appContexts.SaveChanges();
-        //    return Ok(t);
-        //}
+
+            appContexts.SaveChanges();
+            return Ok(t);
+        }
 
 
         [HttpPatch]
