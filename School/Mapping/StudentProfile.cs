@@ -12,22 +12,26 @@ namespace School.Mapping
     {
         public StudentProfile()
         {
-            CreateMap<Student, StudentDTO>()
-                .ForMember(dest => dest.Id,
-                    opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.FullName,
-                    opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
-                .ForMember(dest => dest.ClassRoomName,
-                    opt => opt.MapFrom(src => src.ClassRoom.Name))
-                .ForMember(dest => dest.Email,
-                    opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.DateOfBirth,
-                    opt => opt.MapFrom(src => src.DateOfBirth))
-                .ForMember(dest => dest.PhoneNumber,
-                    opt => opt.MapFrom(src => src.PhoneNumber));
-            CreateMap<Student, CreateStudentDTO>().ReverseMap();
-            CreateMap<Student, UpdateStudentDTO>().ReverseMap();
+            CreateMap<Student, StudentDTO>().ForMember(x=>x.FullName,y=>y.MapFrom(h=>h.FirstName+" "+ h.LastName)).ForMember
+                (x=>x.ClassRoomName,t=>t.MapFrom(g=>g.ClassRoom.Name));
+
+            CreateMap<CreateStudentDTO, Student>();
+
+            CreateMap<UpdateStudentDTO, Student>().AfterMap((s, d) =>
+            {
+                var name = s.FullName.Split(' ');
+                d.FirstName = name[0];
+                d.LastName = name[1];
+            });
         }
 
     }
 }
+//{
+//    "firstName": "Moaz",
+//  "lastName": "Ahmed",
+//  "email": "ss@gmail.com",
+//  "phoneNumber": "1234567890",
+//  "dateOfBirth": "2026-09-12",
+//  "classRoomName": "S3"
+//}

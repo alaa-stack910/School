@@ -13,62 +13,89 @@ namespace School.Controllers
     [ApiController]
     public class TeacherController : ControllerBase
     {
-            private readonly AppContexts appContexts;
-        private readonly IMapper mapper;
 
-        public TeacherController()
-            {
-            appContexts = new AppContexts();
-            mapper = new MapperConfiguration(g=>g.AddProfile<TeacherProfile>()).CreateMapper();
+        //DTO
+        //    private readonly AppContexts appContexts;
 
-        }
-
-
-            [HttpGet]
-            public IActionResult GetAll()
-            {
-            //DTO
-            //    var te = appContexts.Teachers.Include(u=>u.department).ToList();
-
-            //List<TeacherDTO> result = new List<TeacherDTO>();
-            //foreach (var teacher in te)
-            //    {
-            //        var det = new TeacherDTO
-            //        {
-            //            id = teacher.TeacherId,
-            //            FullName = teacher.FirstName + " " + teacher.LastName, 
-
-            //            DepartmentName = teacher.department.Name
-            //        };
-            //        result.Add(det);
-            //    }
-            //return Ok(result);
-
-
-            var te = appContexts.Teachers.Include(u => u.department).ToList();
-
-            List<TeacherDTO> result = mapper.Map<List<TeacherDTO>>(te);
-            
-            return Ok(result);
-        }
-
-        //[HttpGet("WithDepart")]
-
-        //public IActionResult GetAllWithTeacher()
-        //{
-        //    var te = appContexts.Teachers.Include(j => j.department).ToList();
-        //    var i = new TeacherDTO()
+        //public TeacherController()
         //    {
-        //        FullName = te.FirstName + " " + te.LastName,
-        //        DepartmentName = te.department.Name
-        //    };
-        //    return Ok(i);
+        //    appContexts = new AppContexts();
+
         //}
 
+        private readonly AppContexts appContexts;
+        private readonly IMapper mapper;
+        public TeacherController()
+        {
+            appContexts = new AppContexts();
+            mapper = new MapperConfiguration(g => g.AddProfile<TeacherProfile>()).CreateMapper();
+
+        }
+
+
+        //DTO
+        //  [HttpGet]
+        //      public IActionResult GetAll()
+        //      {
+        //          var te = appContexts.Teachers.Include(u => u.department).ToList();
+
+        //      List<TeacherDTO> result = new List<TeacherDTO>();
+        //      foreach (var teacher in te)
+        //      {
+        //          var det = new TeacherDTO
+        //          {
+        //              id = teacher.TeacherId,
+        //              FullName = teacher.FirstName + " " + teacher.LastName,
+
+        //              DepartmentName = teacher.department.Name
+        //          };
+        //          result.Add(det);
+        //      }
+        //      return Ok(result);
+
+
+        //}
+
+
+        //Mapper
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var te = appContexts.Teachers.Include(u => u.department).ToList();
+
+            var result = mapper.Map<List<TeacherDTO>>(te);
+            return Ok(result);
+
+
+        }
+
+        ////DTO
+        //[HttpGet("WithId")]
+        //public IActionResult GetId(int id)
+        //{
+        //    var te = appContexts.Teachers.Include(j=>j.department)
+        //        .FirstOrDefault(o => o.TeacherId == id);
+
+        //    if (te == null)
+        //    {
+        //        return NotFound("Teacher not found");
+        //    }
+
+        //    var v = new TeacherDTO()
+        //    {
+        //        id = te.departmentId,
+        //        DepartmentName = te.department.Name,
+        //        FullName = te.FirstName + " " + te.LastName
+        //    };
+
+        //    return Ok(v);
+        //}
+
+        //Mapper
         [HttpGet("WithId")]
         public IActionResult GetId(int id)
         {
-            var te = appContexts.Teachers.Include(j=>j.department)
+            var te = appContexts.Teachers.Include(j => j.department)
                 .FirstOrDefault(o => o.TeacherId == id);
 
             if (te == null)
@@ -76,87 +103,133 @@ namespace School.Controllers
                 return NotFound("Teacher not found");
             }
 
-var v = mapper.Map<TeacherDTO>(te);
+            var v = mapper.Map<TeacherDTO>(te);
+
             return Ok(v);
         }
 
+        //DTO
+
+        //[HttpPost]
+        //public IActionResult CreateTeacher(CreateTeacherDTO t)
+        //{
+        //    if (t == null)
+        //    {
+        //        return BadRequest("Not Created");
+        //    }
+
+
+        //    var dep = appContexts.Departments.FirstOrDefault(o => o.Name == t.DepartmentName);
+
+        //    var te = new Teacher()
+        //    {
+        //        department = dep,
+        //        Email = t.Email,
+        //        Salary = t.Salary,
+        //        Phone = t.Phone,
+        //        FirstName=t.FirstName,
+        //        LastName=t.LastName
+
+
+        //    };
+        //    appContexts.Teachers.Add(te);
+        //    appContexts.SaveChanges();
+
+        //    var result = new TeacherDTO
+        //    {
+        //        FullName = te.FirstName + " " + te.LastName,
+        //        DepartmentName = te.department.Name
+        //    };
+
+
+        //    return Ok(result);
+
+        //}
+
+        //mapper
         [HttpPost]
         public IActionResult CreateTeacher(CreateTeacherDTO t)
         {
-            //if (t == null)
-            //{
-            //    return BadRequest("Not Created");
-            //}
-
-
-            //var dep=appContexts.Departments.FirstOrDefault(o => o.Name == t.DepartmentName);
-
-            //var te = new Teacher()
-            //{
-            //    FirstName = t.FirstName,
-            //    LastName = t.LastName,
-            //    department = dep,
-            //    Email = t.Email,
-            //    Salary = t.Salary,
-            //    Phone = t.Phone
-
-            //};
-
-            //var result = new TeacherDTO
-            //{
-            //    id = te.TeacherId,
-            //    FullName = te.FirstName + " " + te.LastName,
-            //    DepartmentName = te.department.Name
-            //};
-
-            //appContexts.Teachers.Add(te);
-            //appContexts.SaveChanges();
-
-            //return Ok(result);
-
             if (t == null)
             {
                 return BadRequest("Not Created");
             }
+
+
             var dep = appContexts.Departments.FirstOrDefault(o => o.Name == t.DepartmentName);
-
-
-            var teacher = mapper.Map<Teacher>(t);
-            teacher.department = dep; 
-            appContexts.Teachers.Add(teacher);
+            if (dep == null)
+            {
+                return BadRequest();
+            }
+            var te = mapper.Map<Teacher>(t);
+            te.department = dep;
+            appContexts.Teachers.Add(te);
             appContexts.SaveChanges();
-            var teacherDTO = mapper.Map<TeacherDTO>(teacher);
-            return Ok(teacherDTO);
+
+            var result = mapper.Map<TeacherDTO>(te);
+
+            return Ok(result);
+
         }
 
+        //DTO
+        //[HttpPut]
+
+        //public IActionResult UpdateTeacher(UpdateTeacherDTO t, int id)
+        //{
+        //    var tea = appContexts.Teachers.Include(j => j.department).FirstOrDefault(j => j.TeacherId == id);
+        //    if (t == null)
+        //    {
+        //        return BadRequest("not ");
+        //    }
+
+        //                if (tea == null)
+        //    {
+        //        return NotFound("not created");
+        //    }
+
+        //    var dep = appContexts.Departments.FirstOrDefault(h => h.Name == t.DepartmentName);
+        //    if (dep == null)
+        //    {
+        //        return BadRequest("not ");
+        //    }
+        //    var name = t.FullName.Split(' ');
+        //    tea.FirstName = name[0];
+        //    tea.LastName = name[1];
+        //    tea.department = dep;
+        //    appContexts.SaveChanges();
+
+        //    return Ok(t);
+        //}
+
+        //Mapper
         [HttpPut]
 
         public IActionResult UpdateTeacher(UpdateTeacherDTO t, int id)
         {
+            var tea = appContexts.Teachers.Include(j => j.department).FirstOrDefault(j => j.TeacherId == id);
             if (t == null)
             {
-                return NotFound();
+                return BadRequest("not ");
             }
-            var teacher = appContexts.Teachers
-        .Include(x => x.department)
-        .FirstOrDefault(x => x.TeacherId == id);
 
-            //if (teacher == null)
-            //{
-            //    return NotFound("Teacher not found");
-            //}
-            //teacher.department.Name = t.DepartmentName;
-            //teacher.FirstName = t.FirstName;
-            //teacher.LastName = t.LastName;
-            
-            mapper.Map(t, teacher);
+            if (tea == null)
+            {
+                return NotFound("not created");
+            }
 
-
-
+            var dep = appContexts.Departments.FirstOrDefault(h => h.Name == t.DepartmentName);
+            if (dep == null)
+            {
+                return BadRequest("not ");
+            }
+            mapper.Map(t, tea);
+            tea.department = dep;
             appContexts.SaveChanges();
-            var v= mapper.Map<TeacherDTO>(teacher);
-            return Ok(v);
+            var res = mapper.Map<TeacherDTO>(tea);
+            return Ok(res);
         }
+
 
 
         [HttpPatch]

@@ -76,6 +76,54 @@ namespace School
            MaxGrade = 100,
            TeacherId = 2
        });
+            modelBuilder.Entity<Student>().HasData(
+        new Student
+        {
+            Id = 1,
+            FirstName = "Ahmed",
+            LastName = "Ali",
+            Email = "ahmed.ali@gmail.com",
+            PhoneNumber = "01012345678",
+            DateOfBirth = new DateOnly(2008, 5, 10),
+            ClassRoomId = 1
+        },
+        new Student
+        {
+            Id = 2,
+            FirstName = "Mariam",
+            LastName = "Hassan",
+            Email = "mariam.hassan@gmail.com",
+            PhoneNumber = "01123456789",
+            DateOfBirth = new DateOnly(2008, 8, 15),
+            ClassRoomId = 1
+        });
+
+            modelBuilder.Entity<Enrollment>().HasData(
+        new Enrollment
+        {
+            Id = 1,
+            StudentId = 1,
+            SubjectId = 1,
+            EnrollmentDate = new DateTime(2026, 9, 1),
+            Grade = 95
+        },
+        new Enrollment
+        {
+            Id = 2,
+            StudentId = 1,
+            SubjectId = 2,
+            EnrollmentDate = new DateTime(2026, 9, 2),
+            Grade = 88
+        },
+        new Enrollment
+        {
+            Id = 3,
+            StudentId = 2,
+            SubjectId = 1,
+            EnrollmentDate = new DateTime(2026, 9, 1),
+            Grade = 92
+        });
+
 
            base.OnModelCreating(modelBuilder);
         }

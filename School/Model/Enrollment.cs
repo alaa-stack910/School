@@ -17,6 +17,6 @@ namespace School.Model
         public DateTime EnrollmentDate { get; set; }
 
         [Range(0, 100)]
-        public decimal Grade { get; set; }
+        public int Grade { get; set; }
     }
 }

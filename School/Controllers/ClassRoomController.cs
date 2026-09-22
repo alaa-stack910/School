@@ -40,13 +40,6 @@ namespace School.Controllers
 
         }
 
-        //[HttpGet("WithTeacher")]
-
-        //public IActionResult GetAllWithTeacher()
-        //{
-        //    var te = appContexts.ClassRooms.ToList();
-        //    return Ok(te);
-        //}
 
         [HttpGet("WithId")]
 
@@ -102,19 +95,20 @@ namespace School.Controllers
         }
 
 
-        //[HttpPatch]
-        //public IActionResult PartUpdateDepartment( t, int id)
-        //{
-        //    var dep = appContexts.Departments.FirstOrDefault(o => o.DepartmentId == id);
-        //    if (t == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    dep.Name = t.Name;
-        //    dep.Description = t.Description;
-        //    appContexts.SaveChanges();
-        //    return Ok(dep);
-        //}
+        [HttpPatch]
+        public IActionResult PartUpdateDepartment(ClassRoom t, int id)
+        {
+            var dep = appContexts.ClassRooms.FirstOrDefault(o => o.Id == id);
+            if (t == null)
+            {
+                return NotFound();
+            }
+            dep.Name = t.Name;
+            dep.GradeLevel = t.GradeLevel;
+            dep.Capacity = t.Capacity;
+            appContexts.SaveChanges();
+            return Ok(dep);
+        }
 
 
         [HttpDelete]

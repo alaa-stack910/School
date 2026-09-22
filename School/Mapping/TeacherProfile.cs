@@ -9,16 +9,22 @@ namespace School.Mapping
     {
         public TeacherProfile()
         {
-            CreateMap<Teacher,TeacherDTO>().ForMember(dest => dest.id,
-        opt => opt.MapFrom(src => src.TeacherId))
-    .ForMember(dest => dest.FullName,
-        opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
-    .ForMember(dest => dest.DepartmentName,
-        opt => opt.MapFrom(src => src.department.Name));
 
+            CreateMap<Teacher, TeacherDTO>().ForMember(dest => dest.id,
+            opt => opt.MapFrom(src => src.TeacherId))
+            .ForMember(dest => dest.FullName,
+            opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
+            .ForMember(dest => dest.DepartmentName,
+            opt => opt.MapFrom(src => src.department.Name));
 
-            CreateMap<Teacher, CreateTeacherDTO>().ReverseMap();
-            CreateMap<Teacher,UpdateTeacherDTO>().ReverseMap();
+            CreateMap<CreateTeacherDTO, Teacher>();
+            CreateMap<UpdateTeacherDTO, Teacher>().AfterMap((s, d) =>
+            {
+                s.DepartmentName = d.department.Name;
+                var name = s.FullName.Split(' ');
+                d.FirstName = name[0];
+                d.LastName = name[1];
+            });
         }
     }
 }

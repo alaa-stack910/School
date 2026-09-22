@@ -109,8 +109,8 @@ namespace School.Migrations
                     b.Property<DateTime>("EnrollmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Grade")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Grade")
+                        .HasColumnType("int");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -125,6 +125,32 @@ namespace School.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("Enrollments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EnrollmentDate = new DateTime(2026, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = 95,
+                            StudentId = 1,
+                            SubjectId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            EnrollmentDate = new DateTime(2026, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = 88,
+                            StudentId = 1,
+                            SubjectId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            EnrollmentDate = new DateTime(2026, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = 92,
+                            StudentId = 2,
+                            SubjectId = 1
+                        });
                 });
 
             modelBuilder.Entity("School.Model.Student", b =>
@@ -164,6 +190,28 @@ namespace School.Migrations
                     b.HasIndex("ClassRoomId");
 
                     b.ToTable("Students");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClassRoomId = 1,
+                            DateOfBirth = new DateOnly(2008, 5, 10),
+                            Email = "ahmed.ali@gmail.com",
+                            FirstName = "Ahmed",
+                            LastName = "Ali",
+                            PhoneNumber = "01012345678"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClassRoomId = 1,
+                            DateOfBirth = new DateOnly(2008, 8, 15),
+                            Email = "mariam.hassan@gmail.com",
+                            FirstName = "Mariam",
+                            LastName = "Hassan",
+                            PhoneNumber = "01123456789"
+                        });
                 });
 
             modelBuilder.Entity("School.Model.Subject", b =>

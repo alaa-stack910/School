@@ -10,7 +10,6 @@ namespace School.DTO.TeacherDTOs
         public string Email { get; set; }
         public int Salary { get; set; }
         public string Phone { get; set; }
-        public string FullName { get; set; }
 
 
 
