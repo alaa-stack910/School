@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using School.DTO.DepartmentDTOs;
 using School.DTO.StudentDTOs;
+using School.Mapping;
 using School.Model;
 
 namespace School.Controllers
@@ -13,32 +15,36 @@ namespace School.Controllers
     {
        
             private readonly AppContexts appContexts;
+        private readonly IMapper mapper;
 
-            public StudentController()
-            {
-                appContexts = new AppContexts();
-            }
+        public StudentController()
+        {
+            appContexts = new AppContexts();
+            mapper = new MapperConfiguration(g => g.AddProfile<StudentProfile>()).CreateMapper();
+
+        }
 
 
-            [HttpGet]
+        [HttpGet]
             public IActionResult GetAll()
             {
                 var te = appContexts.Students.ToList();
-                List<StudentDTO> result = new List<StudentDTO>();
-                foreach (var student in te)
-                {
-                    var stu = new StudentDTO
-                    {
-                        Id = student.Id,
-                        FullName = student.FirstName+" "+student.LastName,
-                        ClassRoomName = student.ClassRoom.Name,
-                        Email = student.Email,
-                        DateOfBirth = student.DateOfBirth,
-                        PhoneNumber = student.PhoneNumber
-                    };
-                    result.Add(stu);
-                }
-                return Ok(result);
+            //List<StudentDTO> result = new List<StudentDTO>();
+            //foreach (var student in te)
+            //{
+            //    var stu = new StudentDTO
+            //    {
+            //        Id = student.Id,
+            //        FullName = student.FirstName+" "+student.LastName,
+            //        ClassRoomName = student.ClassRoom.Name,
+            //        Email = student.Email,
+            //        DateOfBirth = student.DateOfBirth,
+            //        PhoneNumber = student.PhoneNumber
+            //    };
+            //    result.Add(stu);
+            //}
+            List<StudentDTO> result = mapper.Map<List<StudentDTO>>(te);
+            return Ok(result);
 
             }
 
@@ -55,29 +61,32 @@ namespace School.Controllers
             public IActionResult GetId(int id)
             {
                 var te = appContexts.Students.Include(j => j.ClassRoom).FirstOrDefault(o => o.Id == id);
+                var ve= mapper.Map<StudentDTO>(te);
 
-                return Ok(te);
+            return Ok(te);
             }
 
             [HttpPost]
 
-            //public IActionResult CreateDepartment(CreateStudentDTO t)
-            //{
-            //    if (t == null)
-            //    {
-            //        return BadRequest("Not Created");
-            //    }
-            //    var clas= appContexts.ClassRooms.FirstOrDefault(o => o.Name == t.ClassRoomName);
+        public IActionResult CreateDepartment(CreateStudentDTO t)
+        {
+            if (t == null)
+            {
+                return BadRequest("Not Created");
+            }
+            //var clas = appContexts.ClassRooms.FirstOrDefault(o => o.Name == t.ClassRoomName);
             //var s = new Student
-            //    {
+            //{
             //};
-            //    appContexts.Departments.Add(department);
-            //    appContexts.SaveChanges();
-            //    return Ok(t);
-            //}
+            var te= mapper.Map<Student>(t);
+            appContexts.Students.Add(te);
+            appContexts.SaveChanges();
+            var studentDTO = mapper.Map<StudentDTO>(te);
+            return Ok(te);
+        }
 
 
-            [HttpPut]
+        [HttpPut]
 
             public IActionResult UpdateDepartment(UpdateDepartmentDTO t, int id)
             {
@@ -104,9 +113,8 @@ namespace School.Controllers
                 {
                     return NotFound();
                 }
-                dep.Name = t.Name;
-                dep.Description = t.Description;
-                appContexts.SaveChanges();
+                mapper.Map(t, dep);
+            appContexts.SaveChanges();
                 return Ok(dep);
             }
 

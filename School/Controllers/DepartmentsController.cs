@@ -45,13 +45,36 @@ namespace School.Controllers
             return Ok(te);
         }
 
-        [HttpGet("WithId")]
+        //[HttpGet("WithId")]
 
-            public IActionResult GetId(int id)
-            {
-                var te = appContexts.Departments.Include(j => j.Teachers).FirstOrDefault(o => o.DepartmentId == id);
-                return Ok(te);
-            }
+        //public IActionResult GetId(int id)
+        //{
+            //    //var te = appContexts.Departments.Include(j => j.Teachers).FirstOrDefault(o => o.DepartmentId == id);
+            //    //var ve = appContexts.Departments.First(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.FirstOrDefault(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.Single(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.SingleOrDefault(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.Last(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.LastOrDefault(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.Where(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.ElementAt(1);
+            //    //var ve = appContexts.Departments.Any(i => i.DepartmentId == id);
+            //    //var ve = appContexts.Departments.All(i => i.DepartmentId == id);
+
+
+            //    ////error
+            //    //var ve = appContexts.Departments.Select(g => g.Name).Contains("S") ;
+            //var ve = appContexts.Departments.SelectMany(i=>i.DepartmentId);
+
+
+            //    //var dep = new DepartmentDTO()
+            //    //{
+            //    //    DepartmentId = te.DepartmentId,
+            //    //    DepartmentName = te.Name,
+            //    //    Description = te.Description
+            //    //};
+        //    return Ok(ve);
+        //}
 
         [HttpPost]
 

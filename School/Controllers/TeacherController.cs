@@ -76,12 +76,7 @@ namespace School.Controllers
                 return NotFound("Teacher not found");
             }
 
-            var v = new TeacherDTO();
-
-            v.id = te.TeacherId;
-            v.FullName = te.FirstName + " " + te.LastName;
-            v.DepartmentName = te.department.Name;
-
+var v = mapper.Map<TeacherDTO>(te);
             return Ok(v);
         }
 
@@ -146,19 +141,21 @@ namespace School.Controllers
         .Include(x => x.department)
         .FirstOrDefault(x => x.TeacherId == id);
 
-            if (teacher == null)
-            {
-                return NotFound("Teacher not found");
-            }
-            teacher.department.Name = t.DepartmentName;
-            teacher.FirstName = t.FirstName;
-            teacher.LastName = t.LastName;
+            //if (teacher == null)
+            //{
+            //    return NotFound("Teacher not found");
+            //}
+            //teacher.department.Name = t.DepartmentName;
+            //teacher.FirstName = t.FirstName;
+            //teacher.LastName = t.LastName;
             
+            mapper.Map(t, teacher);
 
 
 
             appContexts.SaveChanges();
-            return Ok(t);
+            var v= mapper.Map<TeacherDTO>(teacher);
+            return Ok(v);
         }
 
 
