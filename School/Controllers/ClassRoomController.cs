@@ -41,6 +41,7 @@ namespace School.Controllers
         }
 
 
+
         [HttpGet("WithId")]
 
         public IActionResult GetId(int id)

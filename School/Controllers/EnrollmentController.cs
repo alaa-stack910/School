@@ -16,10 +16,12 @@ namespace School.Controllers
         {
             context = new AppContexts();
         }
+
+        //DTO
         [HttpGet]
         public IActionResult GetAll()
         {
-            var all = context.Enrollments.Include(i=>i.Student).Include(h=>h.Subject).ToList();
+            var all = context.Enrollments.Include(i => i.Student).Include(h => h.Subject).ToList();
             List<EnrollmentDTO> dto = new List<EnrollmentDTO>();
             foreach (var e in all)
             {
@@ -35,6 +37,15 @@ namespace School.Controllers
             }
             return Ok(dto);
         }
+
+        //Linq
+        //[HttpGet("Select ID")]
+        //public IActionResult GetAll(int Classid)
+        //{
+        //    var all = context.Enrollments.Where(g=>g.Student.ClassRoomId==Classid).OrderByDescending(g=>g.Grade).ToList();
+
+        //    return Ok(all);
+        //}
 
         [HttpGet("ID")]
         public IActionResult GetID(int id)

@@ -60,14 +60,64 @@ namespace School.Controllers
 
 
         //Mapper
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
+        //    var res = mapper.Map<List<StudentDTO>>(te);
+        //    return Ok(res);
+
+        //}
+
+        //LINQ
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var te = appContexts.Students.Include(g => g.ClassRoom).OrderByDescending(n => n.LastName).ToList();
+        //    var res = mapper.Map<List<StudentDTO>>(te);
+        //    return Ok(res);
+
+        //}
+
+        ////LINQ
         [HttpGet]
         public IActionResult GetAll()
         {
-            var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
-            var res = mapper.Map<List<StudentDTO>>(te);
-            return Ok(res);
+            var te = appContexts.Students.ToList();
+            return Ok(te);
 
         }
+
+        //LINQ1
+        //[HttpGet("Grade")]
+        //public IActionResult GetAll(int id, int grade)
+        //{
+        //    var te = appContexts.Students.Where(g=>g.ClassRoomId==id&& g.Enrollments.Any(v=>v.Grade>=grade)).Select( a=> new
+        //    {
+        //        Id= a.Id,
+        //        FullName = a.FirstName + " " + a.LastName
+
+        //    });
+        //    return Ok(te);
+
+        //}
+        //2
+        [HttpGet("Grade")]
+        public IActionResult GetAll(int id)
+        {
+            var te = appContexts.Students.Where(g => g.ClassRoomId == id ).OrderBy(h=>h.Id)
+                .Select(a => new
+            {
+                Id = a.Id,
+                FullName = a.FirstName + " " + a.LastName,
+                classname=a.ClassRoom.Name
+
+            });
+            return Ok(te);
+
+        }
+
+
 
         //DTO
         //[HttpGet("WithId")]
