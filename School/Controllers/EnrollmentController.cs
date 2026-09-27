@@ -24,10 +24,9 @@ namespace School.Controllers
         private readonly AppContexts context;
         private readonly IMapper mapper;
 
-        public EnrollmentController()
+        public EnrollmentController(AppContexts context )
         {
             context = new AppContexts();
-            mapper = new MapperConfiguration(g => g.AddProfile<EnrollmentProfile>()).CreateMapper();
         }
 
 

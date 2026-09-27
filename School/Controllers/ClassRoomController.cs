@@ -25,10 +25,9 @@ namespace School.Controllers
         private readonly AppContexts appContexts;
         private readonly IMapper mapper;
 
-        public ClassRoomController()
+        public ClassRoomController(AppContexts appContexts)
         {
             appContexts = new AppContexts();
-            mapper = new MapperConfiguration(g => g.AddProfile<ClassRoomProfile>()).CreateMapper();
         }
 
 

@@ -5,17 +5,18 @@ namespace School
 {
     public class AppContexts:DbContext
     {
+        public AppContexts( DbContextOptions options):base(options) { } 
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<ClassRoom> ClassRooms { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=SchoolDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
-            base.OnConfiguring(optionsBuilder);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=SchoolDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        //    base.OnConfiguring(optionsBuilder);
+        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //department
