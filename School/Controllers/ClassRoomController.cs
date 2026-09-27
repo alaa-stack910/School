@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using School.DTO.ClassRoomDTOs;
 using School.DTO.DepartmentDTOs;
+using School.Mapping;
 using School.Model;
 
 namespace School.Controllers
@@ -11,53 +13,108 @@ namespace School.Controllers
     [ApiController]
     public class ClassRoomController : ControllerBase
     {
+        //DTO
+        //private readonly AppContexts appContexts;
 
+        //public ClassRoomController()
+        //{
+        //    appContexts = new AppContexts();
+        //}
+
+        //Mapper
         private readonly AppContexts appContexts;
+        private readonly IMapper mapper;
 
         public ClassRoomController()
         {
             appContexts = new AppContexts();
+            mapper = new MapperConfiguration(g => g.AddProfile<ClassRoomProfile>()).CreateMapper();
         }
 
 
+        //DTO
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var te = appContexts.ClassRooms.ToList();
+        //    List<ClassRoomDTO> result = new List<ClassRoomDTO>();
+        //    foreach (var classRoom in te)
+        //    {
+        //        var det = new ClassRoomDTO
+        //        {
+        //            Id = classRoom.Id,
+        //            Name = classRoom.Name,
+        //            GradeLevel = classRoom.GradeLevel,
+        //            Capacity = classRoom.Capacity
+        //        };
+        //        result.Add(det);
+        //    }
+        //    return Ok(result);
+
+        //}
+
+
+        //Mapper
         [HttpGet]
         public IActionResult GetAll()
         {
             var te = appContexts.ClassRooms.ToList();
-            List<ClassRoomDTO> result = new List<ClassRoomDTO>();
-            foreach (var classRoom in te)
-            {
-                var det = new ClassRoomDTO
-                {
-                    Id = classRoom.Id,
-                    Name = classRoom.Name,
-                    GradeLevel = classRoom.GradeLevel,
-                    Capacity = classRoom.Capacity
-                };
-                result.Add(det);
-            }
+            var result = mapper.Map<List<ClassRoomDTO>>(te);
             return Ok(result);
 
         }
 
 
 
+        //DTO
+        //[HttpGet("WithId")]
+
+        //public IActionResult GetId(int id)
+        //{
+        //    var te = appContexts.ClassRooms.FirstOrDefault(o => o.Id == id);
+        //    var clas= new ClassRoomDTO
+        //    {
+        //        Id = te.Id,
+        //        Name = te.Name,
+        //        GradeLevel = te.GradeLevel,
+        //        Capacity = te.Capacity
+        //    };
+
+        //    return Ok(clas);
+        //}
+
+        //Mapper
         [HttpGet("WithId")]
 
         public IActionResult GetId(int id)
         {
             var te = appContexts.ClassRooms.FirstOrDefault(o => o.Id == id);
-            var clas= new ClassRoomDTO
-            {
-                Id = te.Id,
-                Name = te.Name,
-                GradeLevel = te.GradeLevel,
-                Capacity = te.Capacity
-            };
-
+            var clas = mapper.Map<ClassRoomDTO>(te);
             return Ok(clas);
         }
 
+        //DTO
+        //[HttpPost]
+
+        //public IActionResult CreateClass(CreateClassRoom t)
+        //{
+        //    if (t == null)
+        //    {
+        //        return BadRequest("Not Created");
+        //    }
+        //    var clas = new ClassRoom
+        //    {
+        //        Name = t.Name,
+        //        GradeLevel = t.GradeLevel,
+        //        Capacity = t.Capacity
+        //    };
+        //    appContexts.ClassRooms.Add(clas);
+        //    appContexts.SaveChanges();
+        //    return Ok(t);
+        //}
+
+
+        //Mapper
         [HttpPost]
 
         public IActionResult CreateClass(CreateClassRoom t)
@@ -66,17 +123,34 @@ namespace School.Controllers
             {
                 return BadRequest("Not Created");
             }
-            var clas = new ClassRoom
-            {
-                Name = t.Name,
-                GradeLevel = t.GradeLevel,
-                Capacity = t.Capacity
-            };
+            var clas = mapper.Map<ClassRoom>(t);
             appContexts.ClassRooms.Add(clas);
             appContexts.SaveChanges();
-            return Ok(t);
+            var res = mapper.Map<ClassRoomDTO>(clas);
+
+            return Ok(res);
         }
 
+        //DTO
+        //[HttpPut]
+
+        //public IActionResult UpdateClass(UpdateClassRoom t, int id)
+        //{
+        //    var dep = appContexts.ClassRooms.FirstOrDefault(o => o.Id == id);
+        //    if (t == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    dep.Name = t.Name;
+        //        dep.GradeLevel = t.GradeLevel;
+        //        dep.Capacity = t.Capacity;
+
+        //    appContexts.SaveChanges();
+        //    return Ok(t);
+        //}
+
+
+        //Mapper
 
         [HttpPut]
 
@@ -87,11 +161,9 @@ namespace School.Controllers
             {
                 return NotFound();
             }
-            dep.Name = t.Name;
-                dep.GradeLevel = t.GradeLevel;
-                dep.Capacity = t.Capacity;
-            
+            mapper.Map(t, dep);
             appContexts.SaveChanges();
+            var res = mapper.Map<ClassRoomDTO>(dep);
             return Ok(t);
         }
 

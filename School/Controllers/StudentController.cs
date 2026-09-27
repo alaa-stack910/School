@@ -59,15 +59,15 @@ namespace School.Controllers
         //    }
 
 
-        //Mapper
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
-        //    var res = mapper.Map<List<StudentDTO>>(te);
-        //    return Ok(res);
+       // Mapper
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
+            var res = mapper.Map<List<StudentDTO>>(te);
+            return Ok(res);
 
-        //}
+        }
 
         //LINQ
         //[HttpGet]
@@ -79,14 +79,14 @@ namespace School.Controllers
 
         //}
 
-        ////LINQ
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var te = appContexts.Students.ToList();
-            return Ok(te);
+        //////LINQ
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var te = appContexts.Students.ToList();
+        //    return Ok(te);
 
-        }
+        //}
 
         //LINQ1
         //[HttpGet("Grade")]
@@ -102,20 +102,20 @@ namespace School.Controllers
 
         //}
         //2
-        [HttpGet("Grade")]
-        public IActionResult GetAll(int id)
-        {
-            var te = appContexts.Students.Where(g => g.ClassRoomId == id ).OrderBy(h=>h.Id)
-                .Select(a => new
-            {
-                Id = a.Id,
-                FullName = a.FirstName + " " + a.LastName,
-                classname=a.ClassRoom.Name
+        //[HttpGet("Grade")]
+        //public IActionResult GetAll(int id)
+        //{
+        //    var te = appContexts.Students.Where(g => g.ClassRoomId == id ).OrderBy(h=>h.Id)
+        //        .Select(a => new
+        //    {
+        //        Id = a.Id,
+        //        FullName = a.FirstName + " " + a.LastName,
+        //        classname=a.ClassRoom.Name
 
-            });
-            return Ok(te);
+        //    });
+        //    return Ok(te);
 
-        }
+        //}
 
 
 
