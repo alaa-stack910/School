@@ -23,10 +23,11 @@ namespace School.Controllers
 
         private readonly AppContexts appContexts;
         private readonly IMapper mapper;
-        public DepartmentsController()
+        public DepartmentsController(AppContexts appContexts)
         {
-            appContexts = new AppContexts();
-            mapper = new MapperConfiguration(g => g.AddProfile<DepartmentProfile>()).CreateMapper();
+            this.appContexts = appContexts;
+        
+        mapper = new MapperConfiguration(g => g.AddProfile<DepartmentProfile>()).CreateMapper();
 
         }
 

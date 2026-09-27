@@ -12,9 +12,9 @@ namespace School.Controllers
     {
         private readonly AppContexts context;
 
-        public EnrollmentController()
+        public EnrollmentController(AppContexts context )
         {
-            context = new AppContexts();
+            this.context = context;
         }
 
         //DTO

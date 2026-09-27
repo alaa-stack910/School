@@ -1,11 +1,305 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿//using AutoMapper;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using School.DTO.DepartmentDTOs;
+//using School.DTO.StudentDTOs;
+//using School.Mapping;
+//using School.Model;
+
+//namespace School.Controllers
+//{
+//    [Route("api/[controller]")]
+//    [ApiController]
+//    public class StudentController : ControllerBase
+//    {
+//        //DTO
+//        //    private readonly AppContexts appContexts;
+
+//        //public StudentController()
+//        //{
+//        //    appContexts = new AppContexts();
+
+//        //}
+
+
+//        //Mapper
+//        private readonly AppContexts appContexts;
+//        private readonly IMapper mapper;
+
+//        public StudentController(AppContexts appContexts)
+//        {
+//            this.appContexts = appContexts;
+//            mapper = new MapperConfiguration(g => g.AddProfile<StudentProfile>()).CreateMapper();
+
+//        }
+
+
+//        //DTO
+//        //[HttpGet]
+//        //    public IActionResult GetAll()
+//        //    {
+//        //        var te = appContexts.Students.Include(g=>g.ClassRoom).ToList();
+//        //    List<StudentDTO> result = new List<StudentDTO>();
+//        //    foreach (var student in te)
+//        //    {
+//        //        var stu = new StudentDTO
+//        //        {
+//        //            Id = student.Id,
+//        //            FullName = student.FirstName + " " + student.LastName,
+//        //            ClassRoomName = student.ClassRoom.Name,
+//        //            Email = student.Email,
+//        //            DateOfBirth = student.DateOfBirth,
+//        //            PhoneNumber = student.PhoneNumber
+//        //        };
+//        //        result.Add(stu);
+//        //    }
+//        //    return Ok(result);
+
+//        //    }
+
+
+//        //Mapper
+//        //[HttpGet]
+//        //public IActionResult GetAll()
+//        //{
+//        //    var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
+//        //    var res = mapper.Map<List<StudentDTO>>(te);
+//        //    return Ok(res);
+
+//        //}
+
+//        //LINQ
+//        //[HttpGet]
+//        //public IActionResult GetAll()
+//        //{
+//        //    var te = appContexts.Students.Include(g => g.ClassRoom).OrderByDescending(n => n.LastName).ToList();
+//        //    var res = mapper.Map<List<StudentDTO>>(te);
+//        //    return Ok(res);
+
+//        //}
+
+//        ////LINQ
+//        [HttpGet]
+//        public IActionResult GetAll()
+//        {
+//            var te = appContexts.Students.ToList();
+//            return Ok(te);
+
+//        }
+
+//        //LINQ1
+//        //[HttpGet("Grade")]
+//        //public IActionResult GetAll(int id, int grade)
+//        //{
+//        //    var te = appContexts.Students.Where(g=>g.ClassRoomId==id&& g.Enrollments.Any(v=>v.Grade>=grade)).Select( a=> new
+//        //    {
+//        //        Id= a.Id,
+//        //        FullName = a.FirstName + " " + a.LastName
+
+//        //    });
+//        //    return Ok(te);
+
+//        //}
+//        //2
+//        [HttpGet("Grade")]
+//        public IActionResult GetAll(int id)
+//        {
+//            var te = appContexts.Students.Where(g => g.ClassRoomId == id ).OrderBy(h=>h.Id)
+//                .Select(a => new
+//            {
+//                Id = a.Id,
+//                FullName = a.FirstName + " " + a.LastName,
+//                classname=a.ClassRoom.Name
+
+//            });
+//            return Ok(te);
+
+//        }
+
+
+
+//        //DTO
+//        //[HttpGet("WithId")]
+
+//        //    public IActionResult GetId(int id)
+//        //    {
+//        //        var te = appContexts.Students.Include(j => j.ClassRoom).FirstOrDefault(o => o.Id == id);
+
+//        //    var stu=new StudentDTO()
+//        //    {
+//        //        Id = te.Id,
+//        //        FullName = te.FirstName + " " + te.LastName,
+//        //        ClassRoomName = te.ClassRoom.Name,
+//        //        Email = te.Email,
+//        //        DateOfBirth = te.DateOfBirth,
+//        //        PhoneNumber = te.PhoneNumber
+//        //    };
+
+//        //    return Ok(te);
+
+//        //}
+
+
+//        [HttpGet("WithId")]
+
+//        public IActionResult GetId(int id)
+//        {
+//            var te = appContexts.Students.Include(j => j.ClassRoom).FirstOrDefault(o => o.Id == id);
+
+//            if (te == null)
+//            {
+//                return NotFound();
+//            }
+//            var res = mapper.Map<StudentDTO>(te);
+//            return Ok(te);
+
+//        }
+
+
+
+//        //DTO
+//        //[HttpPost]
+
+//        //public IActionResult CreateDepartment(CreateStudentDTO t)
+//        //{
+//        //    if (t == null)
+//        //    {
+//        //        return BadRequest("Not Created");
+//        //    }
+//        //    var clas = appContexts.ClassRooms.FirstOrDefault(o => o.Name == t.ClassRoomName);
+//        //    if (clas == null)
+//        //    {
+//        //        return BadRequest("Bad Request");
+//        //    }
+//        //    var s = new Student
+//        //    {
+//        //        FirstName=t.FirstName,
+//        //        LastName=t.LastName,
+//        //        Email=t.Email,
+//        //        PhoneNumber=t.PhoneNumber,
+//        //        DateOfBirth=t.DateOfBirth,
+//        //        ClassRoom=clas
+//        //    };
+//        //    appContexts.Students.Add(s);
+//        //    appContexts.SaveChanges();
+
+
+//        //    var res = new StudentDTO()
+//        //    {
+//        //        FullName = s.FirstName + " " + s.LastName,
+//        //        ClassRoomName = s.ClassRoom.Name,
+//        //        Email = s.Email,
+//        //        DateOfBirth = s.DateOfBirth,
+//        //        PhoneNumber = s.PhoneNumber
+
+//        //    };
+//        //    return Ok(res);
+//        //}
+
+//        //Mapper
+//        [HttpPost]
+
+//        public IActionResult CreateDepartment(CreateStudentDTO t)
+//        {
+//            if (t == null)
+//            {
+//                return BadRequest("Not Created");
+//            }
+//            var r = appContexts.ClassRooms.FirstOrDefault(g => g.Name == t.ClassRoomName);
+//            var s = mapper.Map<Student>(t);
+//            s.ClassRoom=r;
+//            appContexts.Students.Add(s);
+//            appContexts.SaveChanges();
+
+//            var res = mapper.Map<StudentDTO>(s);
+
+
+//            return Ok(res);
+//        }
+
+
+//        //DTO
+//        //[HttpPut]
+
+//        //    public IActionResult UpdateDepartment(UpdateStudentDTO t, int id)
+//        //    {
+//        //        var dep = appContexts.Students.FirstOrDefault(o => o.Id == id);
+//        //        if (t == null)
+//        //        {
+//        //            return NotFound();
+//        //        }
+//        //    var clas = appContexts.ClassRooms.FirstOrDefault(h => h.Name == t.ClassRoomName);
+
+//        //    var name = t.FullName.Split(' ');
+//        //    dep.FirstName = name[0];
+//        //    dep.LastName = name[1];
+//        //    dep.Email = t.Email;
+//        //    dep.DateOfBirth = t.DateOfBirth;
+//        //    dep.PhoneNumber = t.PhoneNumber;
+//        //    dep.ClassRoom = clas;
+//        //        appContexts.SaveChanges();
+//        //        return Ok(t);
+//        //    }
+
+//        //Mapper
+//        [HttpPut]
+
+//        public IActionResult UpdateDepartment(UpdateStudentDTO t, int id)
+//        {
+//            var dep = appContexts.Students.FirstOrDefault(o => o.Id == id);
+//            if (t == null)
+//            {
+//                return NotFound();
+//            }
+//            var r = appContexts.ClassRooms.FirstOrDefault(g => g.Name == t.ClassRoomName);
+
+//            mapper.Map(t, dep);
+//            dep.ClassRoom = r;
+//            appContexts.SaveChanges();
+//            var res = mapper.Map<StudentDTO>(dep);
+//            return Ok(res);
+//        }
+
+
+
+//        [HttpPatch]
+//            public IActionResult PartUpdateDepartment(StudentDTO t, int id)
+//            {
+//                var dep = appContexts.Students.FirstOrDefault(o => o.Id == id);
+//                if (t == null)
+//                {
+//                    return NotFound();
+//                }
+//            var name = t.FullName.Split(' ');
+//            dep.FirstName = name[0];
+//            dep.LastName = name[1];
+//            dep.Email = t.Email;
+//            appContexts.SaveChanges();
+//                return Ok(dep);
+//            }
+
+
+//            [HttpDelete]
+//            public IActionResult DeleteDepartment(int id)
+//            {
+//                var dep = appContexts.Departments.FirstOrDefault(o => o.DepartmentId == id);
+//                if (dep == null)
+//                {
+//                    return NotFound();
+//                }
+//                appContexts.Departments.Remove(dep);
+//                appContexts.SaveChanges();
+//                return Ok(dep);
+//            }
+
+
+//        }
+//    }
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using School.DTO.DepartmentDTOs;
 using School.DTO.StudentDTOs;
-using School.Mapping;
 using School.Model;
+using School.Repo.Interface;
 
 namespace School.Controllers
 {
@@ -13,290 +307,200 @@ namespace School.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        //DTO
-        //    private readonly AppContexts appContexts;
+        private readonly IStudent repository;
 
-        //public StudentController()
-        //{
-        //    appContexts = new AppContexts();
-
-        //}
-
-
-        //Mapper
-        private readonly AppContexts appContexts;
-        private readonly IMapper mapper;
-
-        public StudentController()
+        public StudentController(IStudent repository)
         {
-            appContexts = new AppContexts();
-            mapper = new MapperConfiguration(g => g.AddProfile<StudentProfile>()).CreateMapper();
-
+            this.repository = repository;
         }
 
-
-        //DTO
-        //[HttpGet]
-        //    public IActionResult GetAll()
-        //    {
-        //        var te = appContexts.Students.Include(g=>g.ClassRoom).ToList();
-        //    List<StudentDTO> result = new List<StudentDTO>();
-        //    foreach (var student in te)
-        //    {
-        //        var stu = new StudentDTO
-        //        {
-        //            Id = student.Id,
-        //            FullName = student.FirstName + " " + student.LastName,
-        //            ClassRoomName = student.ClassRoom.Name,
-        //            Email = student.Email,
-        //            DateOfBirth = student.DateOfBirth,
-        //            PhoneNumber = student.PhoneNumber
-        //        };
-        //        result.Add(stu);
-        //    }
-        //    return Ok(result);
-
-        //    }
-
-
-        //Mapper
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
-        //    var res = mapper.Map<List<StudentDTO>>(te);
-        //    return Ok(res);
-
-        //}
-
-        //LINQ
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var te = appContexts.Students.Include(g => g.ClassRoom).OrderByDescending(n => n.LastName).ToList();
-        //    var res = mapper.Map<List<StudentDTO>>(te);
-        //    return Ok(res);
-
-        //}
-
-        ////LINQ
         [HttpGet]
         public IActionResult GetAll()
         {
-            var te = appContexts.Students.ToList();
-            return Ok(te);
+            var students = repository.GetAll();
 
-        }
-
-        //LINQ1
-        //[HttpGet("Grade")]
-        //public IActionResult GetAll(int id, int grade)
-        //{
-        //    var te = appContexts.Students.Where(g=>g.ClassRoomId==id&& g.Enrollments.Any(v=>v.Grade>=grade)).Select( a=> new
-        //    {
-        //        Id= a.Id,
-        //        FullName = a.FirstName + " " + a.LastName
-
-        //    });
-        //    return Ok(te);
-
-        //}
-        //2
-        [HttpGet("Grade")]
-        public IActionResult GetAll(int id)
-        {
-            var te = appContexts.Students.Where(g => g.ClassRoomId == id ).OrderBy(h=>h.Id)
-                .Select(a => new
+            var result = students.Select(s => new StudentDTO
             {
-                Id = a.Id,
-                FullName = a.FirstName + " " + a.LastName,
-                classname=a.ClassRoom.Name
+                Id = s.Id,
+                FullName = s.FirstName + " " + s.LastName,
+                Email = s.Email,
+                PhoneNumber = s.PhoneNumber,
+                DateOfBirth = s.DateOfBirth,
+                ClassRoomName = s.ClassRoom.Name
+            }).ToList();
 
-            });
-            return Ok(te);
-
+            return Ok(result);
         }
 
 
+        //// GET: api/Student/Grade?id=1
+        //[HttpGet("Grade")]
+        //public IActionResult GetByClassRoomId(int id)
+        //{
+        //    var students = repository.GetByClassRoomId(id);
 
-        //DTO
-        //[HttpGet("WithId")]
-
-        //    public IActionResult GetId(int id)
+        //    var result = students.Select(s => new
         //    {
-        //        var te = appContexts.Students.Include(j => j.ClassRoom).FirstOrDefault(o => o.Id == id);
+        //        Id = s.Id,
+        //        FullName = s.FirstName + " " + s.LastName,
+        //        ClassRoomName = s.ClassRoom?.Name
+        //    }).ToList();
 
-        //    var stu=new StudentDTO()
-        //    {
-        //        Id = te.Id,
-        //        FullName = te.FirstName + " " + te.LastName,
-        //        ClassRoomName = te.ClassRoom.Name,
-        //        Email = te.Email,
-        //        DateOfBirth = te.DateOfBirth,
-        //        PhoneNumber = te.PhoneNumber
-        //    };
-
-        //    return Ok(te);
-
+        //    return Ok(result);
         //}
 
 
         [HttpGet("WithId")]
-
         public IActionResult GetId(int id)
         {
-            var te = appContexts.Students.Include(j => j.ClassRoom).FirstOrDefault(o => o.Id == id);
+            var student = repository.GetById(id);
 
-            if (te == null)
+            if (student == null)
             {
                 return NotFound();
             }
-            var res = mapper.Map<StudentDTO>(te);
-            return Ok(te);
 
+            var result = new StudentDTO
+            {
+                Id = student.Id,
+                FullName = student.FirstName + " " + student.LastName,
+                Email = student.Email,
+                PhoneNumber = student.PhoneNumber,
+                DateOfBirth = student.DateOfBirth,
+                ClassRoomName = student.ClassRoom.Name
+            };
+
+            return Ok(result);
         }
 
 
-
-        //DTO
-        //[HttpPost]
-
-        //public IActionResult CreateDepartment(CreateStudentDTO t)
-        //{
-        //    if (t == null)
-        //    {
-        //        return BadRequest("Not Created");
-        //    }
-        //    var clas = appContexts.ClassRooms.FirstOrDefault(o => o.Name == t.ClassRoomName);
-        //    if (clas == null)
-        //    {
-        //        return BadRequest("Bad Request");
-        //    }
-        //    var s = new Student
-        //    {
-        //        FirstName=t.FirstName,
-        //        LastName=t.LastName,
-        //        Email=t.Email,
-        //        PhoneNumber=t.PhoneNumber,
-        //        DateOfBirth=t.DateOfBirth,
-        //        ClassRoom=clas
-        //    };
-        //    appContexts.Students.Add(s);
-        //    appContexts.SaveChanges();
-
-
-        //    var res = new StudentDTO()
-        //    {
-        //        FullName = s.FirstName + " " + s.LastName,
-        //        ClassRoomName = s.ClassRoom.Name,
-        //        Email = s.Email,
-        //        DateOfBirth = s.DateOfBirth,
-        //        PhoneNumber = s.PhoneNumber
-
-        //    };
-        //    return Ok(res);
-        //}
-
-        //Mapper
         [HttpPost]
-
-        public IActionResult CreateDepartment(CreateStudentDTO t)
+        public IActionResult CreateStudent(CreateStudentDTO t)
         {
             if (t == null)
             {
                 return BadRequest("Not Created");
             }
-            var r = appContexts.ClassRooms.FirstOrDefault(g => g.Name == t.ClassRoomName);
-            var s = mapper.Map<Student>(t);
-            s.ClassRoom=r;
-            appContexts.Students.Add(s);
-            appContexts.SaveChanges();
-
-            var res = mapper.Map<StudentDTO>(s);
 
 
-            return Ok(res);
+            var student = new Student
+            {
+                FirstName = t.FirstName,
+                LastName = t.LastName,
+                Email = t.Email,
+                PhoneNumber = t.PhoneNumber,
+                DateOfBirth = t.DateOfBirth
+            };
+
+
+            repository.Add(student);
+
+            var result = new StudentDTO
+            {
+                Id = student.Id,
+                FullName = student.FirstName + " " + student.LastName,
+                Email = student.Email,
+                PhoneNumber = student.PhoneNumber,
+                DateOfBirth = student.DateOfBirth,
+                ClassRoomName = student.ClassRoom.Name
+            };
+
+            return Ok(result);
         }
 
 
-        //DTO
-        //[HttpPut]
-
-        //    public IActionResult UpdateDepartment(UpdateStudentDTO t, int id)
-        //    {
-        //        var dep = appContexts.Students.FirstOrDefault(o => o.Id == id);
-        //        if (t == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //    var clas = appContexts.ClassRooms.FirstOrDefault(h => h.Name == t.ClassRoomName);
-
-        //    var name = t.FullName.Split(' ');
-        //    dep.FirstName = name[0];
-        //    dep.LastName = name[1];
-        //    dep.Email = t.Email;
-        //    dep.DateOfBirth = t.DateOfBirth;
-        //    dep.PhoneNumber = t.PhoneNumber;
-        //    dep.ClassRoom = clas;
-        //        appContexts.SaveChanges();
-        //        return Ok(t);
-        //    }
-
-        //Mapper
         [HttpPut]
-
-        public IActionResult UpdateDepartment(UpdateStudentDTO t, int id)
+        public IActionResult UpdateStudent(
+            UpdateStudentDTO t,
+            int id)
         {
-            var dep = appContexts.Students.FirstOrDefault(o => o.Id == id);
             if (t == null)
+            {
+                return BadRequest();
+            }
+
+            var student = repository.GetById(id);
+
+            if (student == null)
             {
                 return NotFound();
             }
-            var r = appContexts.ClassRooms.FirstOrDefault(g => g.Name == t.ClassRoomName);
 
-            mapper.Map(t, dep);
-            dep.ClassRoom = r;
-            appContexts.SaveChanges();
-            var res = mapper.Map<StudentDTO>(dep);
-            return Ok(res);
+            var name = t.FullName.Split(' ');
+
+
+            student.FirstName = name[0];
+            student.LastName = name[1];
+            student.Email = t.Email;
+            student.PhoneNumber = t.PhoneNumber;
+            student.DateOfBirth = t.DateOfBirth;
+
+            repository.Update(student);
+
+            var result = new StudentDTO
+            {
+                Id = student.Id,
+                FullName = student.FirstName + " " + student.LastName,
+                Email = student.Email,
+                PhoneNumber = student.PhoneNumber,
+                DateOfBirth = student.DateOfBirth,
+                ClassRoomName = student.ClassRoom.Name
+            };
+
+            return Ok(result);
         }
 
 
+        //[HttpPatch]
+        //public IActionResult PartUpdateStudent(
+        //    StudentDTO t,
+        //    int id)
+        //{
+        //    var student = repository.GetById(id);
 
-        [HttpPatch]
-            public IActionResult PartUpdateDepartment(StudentDTO t, int id)
+        //    if (student == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (t == null)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    var name = t.FullName.Split(
+        //        ' ',
+        //        StringSplitOptions.RemoveEmptyEntries);
+
+        //    if (name.Length < 2)
+        //    {
+        //        return BadRequest(
+        //            "Please enter first name and last name");
+        //    }
+
+        //    student.FirstName = name[0];
+        //    student.LastName = name[1];
+        //    student.Email = t.Email;
+
+        //    repository.Update(student);
+
+        //    return Ok(student);
+        //}
+
+
+        [HttpDelete]
+        public IActionResult DeleteStudent(Student s)
+        {
+            var student = repository.Delete(s);
+
+            if (student == null)
             {
-                var dep = appContexts.Students.FirstOrDefault(o => o.Id == id);
-                if (t == null)
-                {
-                    return NotFound();
-                }
-            var name = t.FullName.Split(' ');
-            dep.FirstName = name[0];
-            dep.LastName = name[1];
-            dep.Email = t.Email;
-            appContexts.SaveChanges();
-                return Ok(dep);
+                return NotFound();
             }
 
-
-            [HttpDelete]
-            public IActionResult DeleteDepartment(int id)
-            {
-                var dep = appContexts.Departments.FirstOrDefault(o => o.DepartmentId == id);
-                if (dep == null)
-                {
-                    return NotFound();
-                }
-                appContexts.Departments.Remove(dep);
-                appContexts.SaveChanges();
-                return Ok(dep);
-            }
-
-
+            return Ok(student);
         }
     }
-
-
+}
 
 

@@ -14,9 +14,9 @@ namespace School.Controllers
 
         private readonly AppContexts appContexts;
 
-        public ClassRoomController()
+        public ClassRoomController(AppContexts appContexts)
         {
-            appContexts = new AppContexts();
+            this.appContexts = appContexts;
         }
 
 
