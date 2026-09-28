@@ -97,13 +97,13 @@
 //        //        Id= a.Id,
 //        //        FullName = a.FirstName + " " + a.LastName
 
-        //Mapper
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
-        //    var res = mapper.Map<List<StudentDTO>>(te);
-        //    return Ok(res);
+//Mapper
+//[HttpGet]
+//public IActionResult GetAll()
+//{
+//    var te = appContexts.Students.Include(g => g.ClassRoom).ToList();
+//    var res = mapper.Map<List<StudentDTO>>(te);
+//    return Ok(res);
 
 //        //}
 //        //2
@@ -117,54 +117,62 @@
 //                FullName = a.FirstName + " " + a.LastName,
 //                classname=a.ClassRoom.Name
 
-        //LINQ
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var te = appContexts.Students.Include(g => g.ClassRoom).OrderByDescending(n => n.LastName).ToList();
-        //    var res = mapper.Map<List<StudentDTO>>(te);
-        //    return Ok(res);
+//LINQ
+//[HttpGet]
+//public IActionResult GetAll()
+//{
+//    var te = appContexts.Students.Include(g => g.ClassRoom).OrderByDescending(n => n.LastName).ToList();
+//    var res = mapper.Map<List<StudentDTO>>(te);
+//    return Ok(res);
 
 //        }
 
-        ////LINQ
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var te = appContexts.Students.ToList();
-            return Ok(te);
+////LINQ
+//using Microsoft.AspNetCore.Mvc;
+//using School.Model;
+//using School.Repo.Interface;
 
-        }
+//internal class Program
+//{
+//    private static void Main(string[] args)
+//    {
+//        [HttpGet]
+//        public IActionResult GetAll()
+//        {
+//            var te = appContexts.Students.ToList();
+//            return Ok(te);
 
-        //LINQ1
-        //[HttpGet("Grade")]
-        //public IActionResult GetAll(int id, int grade)
-        //{
-        //    var te = appContexts.Students.Where(g=>g.ClassRoomId==id&& g.Enrollments.Any(v=>v.Grade>=grade)).Select( a=> new
-        //    {
-        //        Id= a.Id,
-        //        FullName = a.FirstName + " " + a.LastName
+//        }
+
+//LINQ1
+//[HttpGet("Grade")]
+//public IActionResult GetAll(int id, int grade)
+//{
+//    var te = appContexts.Students.Where(g=>g.ClassRoomId==id&& g.Enrollments.Any(v=>v.Grade>=grade)).Select( a=> new
+//    {
+//        Id= a.Id,
+//        FullName = a.FirstName + " " + a.LastName
 
 //        //    public IActionResult GetId(int id)
 //        //    {
 //        //        var te = appContexts.Students.Include(j => j.ClassRoom).FirstOrDefault(o => o.Id == id);
 
-        //}
-        //2
-        [HttpGet("Grade")]
-        public IActionResult GetAll(int id)
-        {
-            var te = appContexts.Students.Where(g => g.ClassRoomId == id ).OrderBy(h=>h.Id)
-                .Select(a => new
-            {
-                Id = a.Id,
-                FullName = a.FirstName + " " + a.LastName,
-                classname=a.ClassRoom.Name
+//}
+//2
+//[HttpGet("Grade")]
+//public IActionResult GetAll(int id)
+//{
+//    var te = appContexts.Students.Where(g => g.ClassRoomId == id).OrderBy(h => h.Id)
+//        .Select(a => new
+//        {
+//            a.Id,
+//            FullName = a.FirstName + " " + a.LastName,
+//            classname = a.ClassRoom.Name
 
-            });
-            return Ok(te);
+//        });
+//    return Ok(te);
 
-        }
+//}
 
 //        public IActionResult UpdateDepartment(UpdateStudentDTO t, int id)
 //        {
@@ -217,10 +225,12 @@
 
 //        }
 //    }
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using School.DTO.StudentDTOs;
 using School.Model;
 using School.Repo.Interface;
+using School.Mapping;
 
 namespace School.Controllers
 {
@@ -228,29 +238,26 @@ namespace School.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly IStudent repository;
+        private readonly IGenericRepo<Student> repo;
 
-        public StudentController(IStudent repository)
+        private readonly IMapper mapper;
+
+
+
+        public StudentController(IGenericRepo<Student> repos)
         {
-            this.repository = repository;
+            repo = repos;
+            mapper = new MapperConfiguration(g => g.AddProfile<DepartmentProfile>()).CreateMapper();
+
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var students = repository.GetAll();
+            var students = repo.GetAll();
 
-            var result = students.Select(s => new StudentDTO
-            {
-                Id = s.Id,
-                FullName = s.FirstName + " " + s.LastName,
-                Email = s.Email,
-                PhoneNumber = s.PhoneNumber,
-                DateOfBirth = s.DateOfBirth,
-                ClassRoomName = s.ClassRoom.Name
-            }).ToList();
-
-            return Ok(result);
+           
+            return Ok(students);
         }
 
 
@@ -274,24 +281,16 @@ namespace School.Controllers
         [HttpGet("WithId")]
         public IActionResult GetId(int id)
         {
-            var student = repository.GetById(id);
+            var student = repo.GetById(id);
 
             if (student == null)
             {
                 return NotFound();
             }
 
-            var result = new StudentDTO
-            {
-                Id = student.Id,
-                FullName = student.FirstName + " " + student.LastName,
-                Email = student.Email,
-                PhoneNumber = student.PhoneNumber,
-                DateOfBirth = student.DateOfBirth,
-                ClassRoomName = student.ClassRoom.Name
-            };
+          
 
-            return Ok(result);
+            return Ok(student);
         }
 
 
@@ -311,10 +310,12 @@ namespace School.Controllers
                 Email = t.Email,
                 PhoneNumber = t.PhoneNumber,
                 DateOfBirth = t.DateOfBirth
+                , ClassRoomId=t.ClassId
+
             };
 
 
-            repository.Add(student);
+            repo.Add(student);
 
             var result = new StudentDTO
             {
@@ -322,8 +323,8 @@ namespace School.Controllers
                 FullName = student.FirstName + " " + student.LastName,
                 Email = student.Email,
                 PhoneNumber = student.PhoneNumber,
-                DateOfBirth = student.DateOfBirth,
-                ClassRoomName = student.ClassRoom.Name
+                DateOfBirth = student.DateOfBirth
+
             };
 
             return Ok(result);
@@ -340,7 +341,7 @@ namespace School.Controllers
                 return BadRequest();
             }
 
-            var student = repository.GetById(id);
+            var student = repo.GetById(id);
 
             if (student == null)
             {
@@ -356,7 +357,7 @@ namespace School.Controllers
             student.PhoneNumber = t.PhoneNumber;
             student.DateOfBirth = t.DateOfBirth;
 
-            repository.Update(student);
+            repo.Update(student);
 
             var result = new StudentDTO
             {
@@ -365,7 +366,8 @@ namespace School.Controllers
                 Email = student.Email,
                 PhoneNumber = student.PhoneNumber,
                 DateOfBirth = student.DateOfBirth,
-                ClassRoomName = student.ClassRoom.Name
+                ClassId=student.ClassRoomId
+              
             };
 
             return Ok(result);
@@ -410,16 +412,16 @@ namespace School.Controllers
 
 
         [HttpDelete]
-        public IActionResult DeleteStudent(Student s)
+        public IActionResult DeleteStudent(int id)
         {
-            var student = repository.Delete(s);
-
-            if (student == null)
+            var v= repo.GetById(id);
+            if (v == null)
             {
                 return NotFound();
             }
+            repo.Delete(v);
 
-            return Ok(student);
+            return NoContent();
         }
     }
 }

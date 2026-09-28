@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using School;
+using School.Model;
 using School.Repo.Implement;
 using School.Repo.Interface;
 
@@ -12,7 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppContexts>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddScoped<IStudent, ImStudent>();
+builder.Services.AddScoped<IGenericRepo<Student>, ImGenericRepo<Student>>();
+builder.Services.AddScoped<IGenericRepo<Department>, ImGenericRepo<Department>>();
+builder.Services.AddScoped<IGenericRepo<ClassRoom>, ImGenericRepo<ClassRoom>>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
