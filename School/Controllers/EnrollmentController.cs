@@ -24,13 +24,12 @@ namespace School.Controllers
         private readonly AppContexts context;
         private readonly IMapper mapper;
 
-        public EnrollmentController(AppContexts context )
+        public EnrollmentController(AppContexts context)
         {
-            context = new AppContexts();
+            this.context = context;
+
+
         }
-
-
-
         //DTO
         //[HttpGet]
         //public IActionResult GetAll()
