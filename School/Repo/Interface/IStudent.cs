@@ -6,11 +6,11 @@ namespace School.Repo.Interface
     {
           public  List<Student> GetAll();
 
-        //List<Student> GetByClassRoomId(int classRoomId);
+     public   List<Student> GetByClassRoomId(int classRoomId);
 
         public Student GetById(int id);
 
-        //ClassRoom GetClassRoomByName(string name);
+      public  ClassRoom GetClassRoomByName(string name);
 
         public Student Add(Student student);
 

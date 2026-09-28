@@ -22,15 +22,15 @@ namespace School.Repo.Implement
             return v;
         }
 
-        //public List<Student> GetByClassRoomId(int classRoomId)
-        //{
-        //     var s= appContexts.Students
-        //        .Where(s => s.ClassRoomId == classRoomId)
-        //        .OrderBy(s => s.Id)
-        //        .Include(s => s.ClassRoom)
-        //        .ToList();
-        //    return s;
-        //}
+        public List<Student> GetByClassRoomId(int classRoomId)
+        {
+            var s = appContexts.Students
+               .Where(s => s.ClassRoomId == classRoomId)
+               .OrderBy(s => s.Id)
+               .Include(s => s.ClassRoom)
+               .ToList();
+            return s;
+        }
 
         public Student GetById(int id)
         {
@@ -40,12 +40,12 @@ namespace School.Repo.Implement
             return s;
         }
 
-        //public ClassRoom? GetClassRoomByName(string name)
-        //{
-        //    return appContexts.ClassRooms
-        //        .FirstOrDefault(c => c.Name == name);
+        public ClassRoom? GetClassRoomByName(string name)
+        {
+            return appContexts.ClassRooms
+                .FirstOrDefault(c => c.Name == name);
 
-        //}
+        }
 
         public Student Add(Student student)
         {
@@ -57,12 +57,25 @@ namespace School.Repo.Implement
 
         public Student Update(Student student)
         {
-            appContexts.Students.Update(student);
+            var s = appContexts.Students
+                .FirstOrDefault(s => s.Id == student.Id);
+
+            if (s == null)
+            {
+                return null;
+            }
+
+            s.FirstName = student.FirstName;
+            s.LastName = student.LastName;
+            s.Email = student.Email;
+            s.PhoneNumber = student.PhoneNumber;
+            s.DateOfBirth = student.DateOfBirth;
+            s.ClassRoomId = student.ClassRoomId;
+
             appContexts.SaveChanges();
 
-            return student;
+            return s;
         }
-
         public Student Delete(Student student)
         {
             var s = appContexts.Students
