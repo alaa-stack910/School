@@ -231,6 +231,7 @@ using School.DTO.StudentDTOs;
 using School.Model;
 using School.Repo.Interface;
 using School.Mapping;
+using School.Repo.Implement;
 
 namespace School.Controllers
 {
@@ -238,23 +239,22 @@ namespace School.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly IGenericRepo<Student> repo;
 
         private readonly IMapper mapper;
+        private readonly Istudent istudent;
 
-
-
-        public StudentController(IGenericRepo<Student> repos)
+        public StudentController(Istudent student)
         {
-            repo = repos;
+            istudent = student;
             mapper = new MapperConfiguration(g => g.AddProfile<DepartmentProfile>()).CreateMapper();
 
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int id)
         {
-            var students = repo.GetAll();
+
+            var students = istudent.GetAll();
 
            
             return Ok(students);
@@ -281,7 +281,7 @@ namespace School.Controllers
         [HttpGet("WithId")]
         public IActionResult GetId(int id)
         {
-            var student = repo.GetById(id);
+            var student = istudent.GetById(id);
 
             if (student == null)
             {
@@ -315,7 +315,7 @@ namespace School.Controllers
             };
 
 
-            repo.Add(student);
+            istudent.Add(student);
 
             var result = new StudentDTO
             {
@@ -341,7 +341,7 @@ namespace School.Controllers
                 return BadRequest();
             }
 
-            var student = repo.GetById(id);
+            var student = istudent.GetById(id);
 
             if (student == null)
             {
@@ -357,7 +357,7 @@ namespace School.Controllers
             student.PhoneNumber = t.PhoneNumber;
             student.DateOfBirth = t.DateOfBirth;
 
-            repo.Update(student);
+            istudent.Update(student);
 
             var result = new StudentDTO
             {
@@ -414,12 +414,12 @@ namespace School.Controllers
         [HttpDelete]
         public IActionResult DeleteStudent(int id)
         {
-            var v= repo.GetById(id);
+            var v= istudent.GetById(id);
             if (v == null)
             {
                 return NotFound();
             }
-            repo.Delete(v);
+            istudent.Delete(v);
 
             return NoContent();
         }

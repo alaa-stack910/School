@@ -16,6 +16,18 @@ builder.Services.AddDbContext<AppContexts>(o => o.UseSqlServer(builder.Configura
 builder.Services.AddScoped<IGenericRepo<Student>, ImGenericRepo<Student>>();
 builder.Services.AddScoped<IGenericRepo<Department>, ImGenericRepo<Department>>();
 builder.Services.AddScoped<IGenericRepo<ClassRoom>, ImGenericRepo<ClassRoom>>();
+builder.Services.AddScoped<ITeacher,ImTeacher >();
+builder.Services.AddScoped<Istudent, ImStudent>();
+builder.Services.AddScoped<ISubject, ImSubject>();
+builder.Services.AddScoped<IClassRoom, ImClassRoom>();
+builder.Services.AddScoped<IEnrollment, ImEnrollment>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
+
+
+
+
 
 var app = builder.Build();
 

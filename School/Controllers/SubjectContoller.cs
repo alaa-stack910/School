@@ -257,64 +257,78 @@ namespace School.Controllers
     {
 
 
-        private readonly IGenericRepo<Student> repo;
-
         private readonly IMapper mapper;
+        private readonly ISubject Si    ;
 
-
-
-        public SubjectContoller(IGenericRepo<Student> repos)
+        public SubjectContoller(ISubject s)
         {
-            repo = repos;
+            Si = s;
             mapper = new MapperConfiguration(g => g.AddProfile<SubjectProfile>()).CreateMapper();
 
         }
 
+
+
+
+
         [HttpGet]
         public IActionResult GetAll()
         {
-            var te = repo.GetAll();
+            var te = Si.GetAll();
             var result = mapper.Map<List<SubjectDTO>>(te);
             return Ok(result);
 
         }
-
-
-       
-
-        [HttpGet("WithId")]
-
-        public IActionResult GetId(int id)
+        [HttpGet("TaughtByTeachers")]
+        public IActionResult TaughtByTeachers(int id)
         {
-            var te = repo.GetById( id);
+            string te = Si.TaughtByTeacher(id);
+            return Ok(te);
 
-            if (te == null)
-            {
-                return NotFound();
-            }
-            var result = mapper.Map<SubjectDTO>(te);
-
-            return Ok(result);
         }
 
-       
-        [HttpPost]
-        public IActionResult CreateSubject(CreateSubjectDTO t)
+
+        [HttpGet("TaughtByTeachersLast")]
+        public IActionResult TaughtByTeachersLast(int id)
         {
-            if (t == null)
-            {
-                return BadRequest("Not Created");
-            }
-            var te = appContexts.Teachers.FirstOrDefault(g => g.FirstName + " " + g.LastName == t.TeacherName);
-            var sub = mapper.Map<Subject>(t);
-            sub.Teacher = te;
-            appContexts.Subjects.Add(sub);
-            appContexts.SaveChanges();
+            var te = Si.TaughtByTeacherLast(id);
+            return Ok(te);
 
-            var res = mapper.Map<SubjectDTO>(sub);
-
-            return Ok(res);
         }
+
+        //[HttpGet("WithId")]
+
+        //public IActionResult GetId(int id)
+        //{
+        //    var te = repo.GetById( id);
+
+        //    if (te == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var result = mapper.Map<SubjectDTO>(te);
+
+        //    return Ok(result);
+        //}
+
+
+        //[HttpPost]
+        //public IActionResult CreateSubject(CreateSubjectDTO t)
+        //{
+        //    if (t == null)
+        //    {
+        //        return BadRequest("Not Created");
+        //    }
+        //    var te = appContexts.Teachers.FirstOrDefault(g => g.FirstName + " " + g.LastName == t.TeacherName);
+        //    var sub = mapper.Map<Subject>(t);
+        //    sub.Teacher = te;
+        //    appContexts.Subjects.Add(sub);
+        //    appContexts.SaveChanges();
+
+        //    var res = mapper.Map<SubjectDTO>(sub);
+
+        //    return Ok(res);
+        //}
 
 
         //DTO
@@ -345,53 +359,53 @@ namespace School.Controllers
 
 
         //Mapper
-        [HttpPut]
+        //[HttpPut]
 
-        public IActionResult UpdateSubject(UpdateSubjectDTO t, int id)
-        {
-            var dep = appContexts.Subjects.Include(h => h.Teacher).FirstOrDefault(o => o.Id == id);
-            if (t == null)
-            {
-                return NotFound();
-            }
-            var te = appContexts.Teachers.FirstOrDefault(g => g.FirstName + " " + g.LastName == t.TeacherName);
+        //public IActionResult UpdateSubject(UpdateSubjectDTO t, int id)
+        //{
+        //    var dep = appContexts.Subjects.Include(h => h.Teacher).FirstOrDefault(o => o.Id == id);
+        //    if (t == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var te = appContexts.Teachers.FirstOrDefault(g => g.FirstName + " " + g.LastName == t.TeacherName);
 
-            mapper.Map(t, dep);
-            dep.Teacher = te;
+        //    mapper.Map(t, dep);
+        //    dep.Teacher = te;
 
-            appContexts.SaveChanges();
-            var res = mapper.Map<SubjectDTO>(dep);
+        //    appContexts.SaveChanges();
+        //    var res = mapper.Map<SubjectDTO>(dep);
 
-            return Ok(res);
-        }
-
-
-        [HttpPatch]
-        public IActionResult PartUpdateDepartment(Subject t, int id)
-        {
-            var dep = appContexts.Departments.FirstOrDefault(o => o.DepartmentId == id);
-            if (t == null)
-            {
-                return NotFound();
-            }
-            dep.Name = t.Name;
-            dep.Description = t.Description;
-            appContexts.SaveChanges();
-            return Ok(dep);
-        }
+        //    return Ok(res);
+        //}
 
 
-        [HttpDelete]
-        public IActionResult DeleteSubject(int id)
-        {
-            var dep = appContexts.Subjects.FirstOrDefault(o => o.Id == id);
-            if (dep == null)
-            {
-                return NotFound();
-            }
-            appContexts.Subjects.Remove(dep);
-            appContexts.SaveChanges();
-            return Ok(dep);
-        }
+        //[HttpPatch]
+        //public IActionResult PartUpdateDepartment(Subject t, int id)
+        //{
+        //    var dep = appContexts.Departments.FirstOrDefault(o => o.DepartmentId == id);
+        //    if (t == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    dep.Name = t.Name;
+        //    dep.Description = t.Description;
+        //    appContexts.SaveChanges();
+        //    return Ok(dep);
+        //}
+
+
+        //[HttpDelete]
+        //public IActionResult DeleteSubject(int id)
+        //{
+        //    var dep = appContexts.Subjects.FirstOrDefault(o => o.Id == id);
+        //    if (dep == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    appContexts.Subjects.Remove(dep);
+        //    appContexts.SaveChanges();
+        //    return Ok(dep);
+        //}
     }
 }

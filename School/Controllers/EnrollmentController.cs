@@ -5,6 +5,8 @@ using School.Model;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using School.Mapping;
+using School.Repo.Implement;
+using School.Repo.Interface;
 
 namespace School.Controllers
 {
@@ -21,15 +23,37 @@ namespace School.Controllers
         //}
 
         //mapper
-        private readonly AppContexts context;
         private readonly IMapper mapper;
+        private readonly IEnrollment enrollment;
 
-        public EnrollmentController(AppContexts context)
+        public EnrollmentController(IEnrollment enrollments)
         {
-            this.context = context;
+            enrollment = enrollments;
+            mapper = new MapperConfiguration(g => g.AddProfile<EnrollmentProfile>()).CreateMapper();
 
 
         }
+
+        [HttpGet("GetOldEnrollment")]
+        public IActionResult GetOldEnrollment(int id)
+        {
+            var all = enrollment.GetOldestEnrollment(id);
+            var res = mapper.Map<EnrollmentDTO>(all);
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var all = enrollment.GetAll();
+            var res = mapper.Map<List<EnrollmentDTO>>(all);
+            return Ok(res);
+        }
+
+    }
+}
+        
+        
         //DTO
         //[HttpGet]
         //public IActionResult GetAll()
@@ -53,13 +77,13 @@ namespace School.Controllers
 
 
         //Mapper
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var all = context.Enrollments.Include(i => i.Student).Include(h => h.Subject).ToList();
-            var res = mapper.Map<List<EnrollmentDTO>>(all);
-            return Ok(res);
-        }
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var all = context.Enrollments.Include(i => i.Student).Include(h => h.Subject).ToList();
+        //    var res = mapper.Map<List<EnrollmentDTO>>(all);
+        //    return Ok(res);
+        //}
 
         //DTO
         //[HttpGet("ID")]
@@ -79,14 +103,14 @@ namespace School.Controllers
 
 
         //Mapper
-        [HttpGet("ID")]
-        public IActionResult GetID(int id)
-        {
-            var enroll = context.Enrollments.Include(i => i.Student).Include(h => h.Subject).FirstOrDefault(u => u.Id == id);
-            var res = mapper.Map<EnrollmentDTO>(enroll);
+        //[HttpGet("ID")]
+        //public IActionResult GetID(int id)
+        //{
+        //    var enroll = context.Enrollments.Include(i => i.Student).Include(h => h.Subject).FirstOrDefault(u => u.Id == id);
+        //    var res = mapper.Map<EnrollmentDTO>(enroll);
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
 
 
         //DTO
@@ -114,25 +138,25 @@ namespace School.Controllers
         //}
 
         //Mapper
-        [HttpPost]
-        public IActionResult Create(CreateEnrollmentDTO dto)
-        {
-            if (dto == null)
-            {
-                return BadRequest("Not Created");
-            }
-            var student = context.Students.FirstOrDefault(u => u.FirstName + " " + u.LastName == dto.StudentName);
-            var subject = context.Subjects.FirstOrDefault(u => u.Name == dto.SubjectName);
+        //[HttpPost]
+        //public IActionResult Create(CreateEnrollmentDTO dto)
+        //{
+        //    if (dto == null)
+        //    {
+        //        return BadRequest("Not Created");
+        //    }
+        //    var student = context.Students.FirstOrDefault(u => u.FirstName + " " + u.LastName == dto.StudentName);
+        //    var subject = context.Subjects.FirstOrDefault(u => u.Name == dto.SubjectName);
 
-            var enroll = mapper.Map<Enrollment>(dto);
-            enroll.Student = student;
-            enroll.Subject = subject;
-            context.Enrollments.Add(enroll);
-            context.SaveChanges();
-            var res = mapper.Map<EnrollmentDTO>(enroll);
+        //    var enroll = mapper.Map<Enrollment>(dto);
+        //    enroll.Student = student;
+        //    enroll.Subject = subject;
+        //    context.Enrollments.Add(enroll);
+        //    context.SaveChanges();
+        //    var res = mapper.Map<EnrollmentDTO>(enroll);
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
 
 
         //DTO
@@ -161,65 +185,65 @@ namespace School.Controllers
 
 
         //Mapper
-        [HttpPut]
-        public IActionResult Update(UpdateEnrollmentDTO dto, int id)
-        {
-            var enroll = context.Enrollments.FirstOrDefault(u => u.Id == id);
-            if (enroll == null)
-            {
-                return NotFound("Not Found");
-            }
-            if (dto == null)
-            {
-                return BadRequest("bad");
-            }
-            var student = context.Students.FirstOrDefault(u => u.FirstName + " " + u.LastName == dto.StudentName);
-            var subject = context.Subjects.FirstOrDefault(u => u.Name == dto.SubjectName);
+        //[HttpPut]
+        //public IActionResult Update(UpdateEnrollmentDTO dto, int id)
+        //{
+        //    var enroll = context.Enrollments.FirstOrDefault(u => u.Id == id);
+        //    if (enroll == null)
+        //    {
+        //        return NotFound("Not Found");
+        //    }
+        //    if (dto == null)
+        //    {
+        //        return BadRequest("bad");
+        //    }
+        //    var student = context.Students.FirstOrDefault(u => u.FirstName + " " + u.LastName == dto.StudentName);
+        //    var subject = context.Subjects.FirstOrDefault(u => u.Name == dto.SubjectName);
 
-            mapper.Map(dto, enroll);
-            enroll.Student = student;
-            enroll.Subject = subject;
-            context.SaveChanges();
+        //    mapper.Map(dto, enroll);
+        //    enroll.Student = student;
+        //    enroll.Subject = subject;
+        //    context.SaveChanges();
 
-            var res = mapper.Map<EnrollmentDTO>(enroll);
-            return Ok(res);
-        }
-        [HttpPatch]
-        public IActionResult UpdatebyPatch(UpdateEnrollmentDTO dto, int id)
-        {
-            var enroll = context.Enrollments.FirstOrDefault(u => u.Id == id);
-            if (enroll == null)
-            {
-                return NotFound("Not Found");
-            }
-            if (dto == null)
-            {
-                return BadRequest("bad");
-            }
-            var student = context.Students.FirstOrDefault(u => u.FirstName + " " + u.LastName == dto.StudentName);
-            var subject = context.Subjects.FirstOrDefault(u => u.Name == dto.SubjectName);
+        //    var res = mapper.Map<EnrollmentDTO>(enroll);
+        //    return Ok(res);
+        //}
+        //[HttpPatch]
+        //public IActionResult UpdatebyPatch(UpdateEnrollmentDTO dto, int id)
+        //{
+        //    var enroll = context.Enrollments.FirstOrDefault(u => u.Id == id);
+        //    if (enroll == null)
+        //    {
+        //        return NotFound("Not Found");
+        //    }
+        //    if (dto == null)
+        //    {
+        //        return BadRequest("bad");
+        //    }
+        //    var student = context.Students.FirstOrDefault(u => u.FirstName + " " + u.LastName == dto.StudentName);
+        //    var subject = context.Subjects.FirstOrDefault(u => u.Name == dto.SubjectName);
 
-            enroll.Grade = dto.Grade;
-            context.SaveChanges();
-            return Ok(dto);
-        }
+        //    enroll.Grade = dto.Grade;
+        //    context.SaveChanges();
+        //    return Ok(dto);
+        //}
 
-        [HttpDelete]
-        public IActionResult Delete( int id)
-        {
-            var enroll = context.Enrollments.FirstOrDefault(u => u.Id == id);
-            if (enroll == null)
-            {
-                return NotFound("Not Found");
-            }
-            context.Enrollments.Remove(enroll);
+//        [HttpDelete]
+//        public IActionResult Delete( int id)
+//        {
+//            var enroll = context.Enrollments.FirstOrDefault(u => u.Id == id);
+//            if (enroll == null)
+//            {
+//                return NotFound("Not Found");
+//            }
+//            context.Enrollments.Remove(enroll);
 
-            context.SaveChanges();
-            return NoContent();
-        }
+//            context.SaveChanges();
+//            return NoContent();
+//        }
 
-    }
-}
+//    }
+//}
 //{
 //    {
 //        "studentName": "Mariam Hassan",

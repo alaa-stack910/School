@@ -5,6 +5,9 @@
         public int id { get; set; }
         public string FullName { get; set; }
         public string DepartmentName { get; set; }
+        public int Salary { get; set; }
+        public int departmentId { get; set; }
+
 
     }
 }

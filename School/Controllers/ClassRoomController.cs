@@ -197,6 +197,8 @@
 //        }
 //    }
 //}
+using System.Collections.Generic;
+using System.Security.Policy;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -205,6 +207,7 @@ using School.DTO.ClassRoomDTOs;
 using School.DTO.DepartmentDTOs;
 using School.Mapping;
 using School.Model;
+using School.Repo.Implement;
 using School.Repo.Interface;
 
 namespace School.Controllers
@@ -213,70 +216,109 @@ namespace School.Controllers
     [ApiController]
     public class ClassRoomController : ControllerBase
     {
-        private readonly IGenericRepo<ClassRoom> repo;
-
         private readonly IMapper mapper;
-
-
-
-        public ClassRoomController(IGenericRepo<ClassRoom> repos)
+        private readonly IClassRoom classRoom;
+        private readonly IUnitOfWork unitOfWork;
+        public ClassRoomController(IClassRoom cclassRoom, IUnitOfWork unitOfWork)
         {
-            repo = repos;
+            classRoom = cclassRoom;
             mapper = new MapperConfiguration(g => g.AddProfile<ClassRoomProfile>()).CreateMapper();
-
+            this.unitOfWork = unitOfWork;
         }
 
 
-
-        [HttpGet]
-        public IActionResult GetAll()
+        [HttpGet("Capacity")]
+        public IActionResult GetByCapacitys(int cap)
         {
-            var te = repo.GetAll();
-            var result = mapper.Map<List<ClassRoomDTO>>(te);
+            var te = classRoom.GetByCapacity(cap);
+            var result = mapper.Map<ClassRoomDTO>(te);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+
+        }
+        [HttpGet("ByName")]
+        public IActionResult GetByNames(string name)
+        {
+            var te = classRoom.GetByName(name);
+            var result = mapper.Map<ClassRoomDTO>(te);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
 
         }
 
-        [HttpGet("WithId")]
+        [HttpGet("ByIndex")]
 
-        public IActionResult GetId(int id)
+        public IActionResult GetByIndexs(int index)
         {
-            var te = repo.GetById(id);
-            var clas = mapper.Map<ClassRoomDTO>(te);
-            return Ok(clas);
+            var c = unitOfWork.classRoom.GetByIndex(index);
+            return Ok(c);
+
+        }
+        [HttpGet("ByGrade")]
+
+        public IActionResult GetByGrades(int g, int p)
+        {
+            var c = unitOfWork.classRoom.GetByGrade(g,p);
+            return Ok(c);
+
         }
 
-       
-        [HttpPost]
 
-        public IActionResult CreateClass(CreateClassRoom t)
-        {
-            if (t == null)
-            {
-                return BadRequest("Not Created");
-            }
-            var clas = mapper.Map<ClassRoom>(t);
-            repo.Add(clas);
-            var res = mapper.Map<ClassRoomDTO>(clas);
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var te = repo.GetAll();
+        //    var result = mapper.Map<List<ClassRoomDTO>>(te);
+        //    return Ok(result);
 
-            return Ok(res);
-        }
+        //}
 
-       
-        [HttpPut]
+        //[HttpGet("WithId")]
 
-        public IActionResult UpdateClass(UpdateClassRoom t, int id)
-        {
-            var dep = repo.GetById (id);
-            if (t == null)
-            {
-                return NotFound();
-            }
-            mapper.Map(t, dep);
-            repo.Update(dep);
-            var res = mapper.Map<ClassRoomDTO>(dep);
-            return Ok(res);
-        }
+        //public IActionResult GetId(int id)
+        //{
+        //    var te = repo.GetById(id);
+        //    var clas = mapper.Map<ClassRoomDTO>(te);
+        //    return Ok(clas);
+        //}
+
+
+        //[HttpPost]
+
+        //public IActionResult CreateClass(CreateClassRoom t)
+        //{
+        //    if (t == null)
+        //    {
+        //        return BadRequest("Not Created");
+        //    }
+        //    var clas = mapper.Map<ClassRoom>(t);
+        //    repo.Add(clas);
+        //    var res = mapper.Map<ClassRoomDTO>(clas);
+
+        //    return Ok(res);
+        //}
+
+
+        //[HttpPut]
+
+        //public IActionResult UpdateClass(UpdateClassRoom t, int id)
+        //{
+        //    var dep = repo.GetById (id);
+        //    if (t == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    mapper.Map(t, dep);
+        //    repo.Update(dep);
+        //    var res = mapper.Map<ClassRoomDTO>(dep);
+        //    return Ok(res);
+        //}
 
 
         //[HttpPatch]
@@ -295,16 +337,16 @@ namespace School.Controllers
         //}
 
 
-        [HttpDelete]
-        public IActionResult DeleteClass(int id)
-        {
-            var dep = repo.GetById(id);
-            if (dep == null)
-            {
-                return NotFound();
-            }
-            repo.Delete(dep);
-            return Ok(dep);
-        }
+        //[HttpDelete]
+        //public IActionResult DeleteClass(int id)
+        //{
+        //    var dep = repo.GetById(id);
+        //    if (dep == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    repo.Delete(dep);
+        //    return Ok(dep);
+        //}
     }
 }
