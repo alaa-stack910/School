@@ -43,7 +43,7 @@ unitOfWork= unitOfWorks;
 
             }
             var token = GenerateToken(u);
-            return Ok();
+            return Ok(token);
         }
 
 
