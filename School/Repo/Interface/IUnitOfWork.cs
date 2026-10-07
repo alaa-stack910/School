@@ -11,6 +11,7 @@ namespace School.Repo.Interface
         public ITeacher teacher { get; }
         public IClassRoom classRoom { get; }
         public IGenericRepo<Department> department { get; }
+        public IUser user { get; }
         public void Save();
 
 

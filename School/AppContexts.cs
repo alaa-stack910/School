@@ -12,6 +12,7 @@ namespace School
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<ClassRoom> ClassRooms { get; set; }
+        public DbSet<User> Users { get; set; }
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=SchoolDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
@@ -25,6 +26,7 @@ namespace School
             modelBuilder.Entity<Department>().HasKey(b => b.DepartmentId);
             modelBuilder.Entity<Department>().Property(b => b.Description).HasMaxLength(500);
 
+            modelBuilder.Entity<User>().HasData(new User { Id = 1, UserName="alaa123",PasswordHash="1234",Role="Admin" });
             //teacher
             modelBuilder.Entity<Teacher>().HasKey(a => a.TeacherId);
             modelBuilder.Entity<Teacher>().HasOne(o => o.department).WithMany(t=>t.Teachers).HasForeignKey(h => h.departmentId);

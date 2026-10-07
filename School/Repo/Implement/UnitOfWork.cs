@@ -12,8 +12,10 @@ namespace School.Repo.Implement
         public ITeacher teacher { get; }
         public IClassRoom classRoom { get; }
         public IGenericRepo<Department> department { get; }
+        public IUser user { get; }
 
-        public UnitOfWork(AppContexts _context, Istudent students, ISubject subject, IEnrollment enrollment, ITeacher teacher, IClassRoom classRoom, IGenericRepo<Department> department)
+        public UnitOfWork(AppContexts _context, Istudent students, ISubject subject, IEnrollment enrollment, ITeacher teacher, IClassRoom classRoom, IGenericRepo<Department> department, IUser users
+)
         {
             this.enrollment = enrollment;
             this.students = students;
@@ -21,6 +23,7 @@ namespace School.Repo.Implement
             this.teacher = teacher;
             this.classRoom = classRoom;
             this.department = department;
+            user = users;
 
         }
         public void Save()

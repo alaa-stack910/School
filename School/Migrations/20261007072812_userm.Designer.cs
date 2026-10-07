@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School;
 
@@ -11,9 +12,11 @@ using School;
 namespace School.Migrations
 {
     [DbContext(typeof(AppContexts))]
-    partial class AppContextsModelSnapshot : ModelSnapshot
+    [Migration("20261007072812_userm")]
+    partial class userm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -348,15 +351,6 @@ namespace School.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            PasswordHash = "1234",
-                            Role = "Admin",
-                            UserName = "alaa123"
-                        });
                 });
 
             modelBuilder.Entity("School.Model.Enrollment", b =>
